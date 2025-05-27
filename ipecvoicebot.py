@@ -1,22 +1,22 @@
+# voicebot.py
+
 import streamlit as st
 import wikipedia
 import wolframalpha
 from gtts import gTTS
 import speech_recognition as sr
-import os
 import tempfile
-import time
+import os
 
-# === TTS Function Using gTTS (Cloud-compatible) ===
-def SpeakText(text):
+# === TTS Function using gTTS ===
+def SpeakText(command):
     try:
-        tts = gTTS(text)
+        tts = gTTS(text=command, lang='en')
         with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as fp:
             tts.save(fp.name)
-            st.audio(fp.name, format="audio/mp3")
-            time.sleep(1)  # Ensure Streamlit loads audio
+            st.audio(fp.name)
     except Exception as e:
-        st.error(f"TTS error: {e}")
+        st.warning("Audio playback failed.")
 
 # === Search Function ===
 def search(query, app_id):
@@ -24,7 +24,7 @@ def search(query, app_id):
         client = wolframalpha.Client(app_id)
         res = client.query(query)
         answer = next(res.results).text
-        st.success(f"iPEC-Voice Assistant: {answer}")
+        st.success(f"WolframAlpha Answer: {answer}")
         SpeakText("Your answer is " + answer)
     except Exception as e:
         try:
@@ -39,7 +39,7 @@ def search(query, app_id):
 def listen_voice():
     r = sr.Recognizer()
     with sr.Microphone() as source:
-        st.info("🎙️ Listening... Speak now.")
+        st.info("🎙 Listening... Speak now.")
         r.adjust_for_ambient_noise(source, duration=1)
         audio = r.listen(source)
         try:
@@ -54,7 +54,7 @@ def listen_voice():
 
 # === Streamlit UI ===
 st.title("🤖 Voice/Text Intelligent Search Assistant")
-st.markdown("**Developers:** Shaheel, Ashiqu, Hunais | Data Science @iPECsolutions.com")
+st.markdown("*Developers:* Shaheel, Ashiqu, Hunais | Data Science @iPECsolutions.com")
 
 st.markdown("Enter your query below or use your voice:")
 
@@ -67,10 +67,10 @@ use_voice = st.checkbox("🎤 Use voice instead of text", value=False)
 query = ""
 
 if use_voice:
-    if st.button("🎙️ Start Listening"):
+    if st.button("🎙 Start Listening"):
         query = listen_voice()
 else:
-    query = st.text_input("✍️ Type your question:")
+    query = st.text_input("✍ Type your question:")
 
 if st.button("🔍 Search"):
     if not app_id:
