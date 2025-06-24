@@ -54,7 +54,7 @@ def listen_voice():
 
 # === Streamlit UI ===
 st.title("🤖 Voice/Text Intelligent Search Assistant")
-st.markdown("*Developers:* Shaheel, Ashiqu, Hunais | Data Science @iPECsolutions.com")
+st.markdown("*Developers:* Muhammed Ashiqu | Data Science @iPECsolutions.com")
 
 st.markdown("Enter your query below or use your voice:")
 
